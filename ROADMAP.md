@@ -65,7 +65,7 @@ Everything the spec describes, production-ready.
 |---|---|---|---|
 | 1 | **Task 5 Approach B** | ❌ Not started | 4-turn incremental drafting with per-turn validation. Needs: prompts (5 new), `EmailDrafting::ApproachB` module, per-turn validation logic, per-turn validation prompts (3 new) |
 | 2 | **All 6 quality checks** | ✅ Complete | Already done — 4 LLM + 2 programmatic |
-| 3 | **A/B testing** | ⚠️ Partial | Config exists, but no runtime routing. Fix: route by `DRAFTING_CONFIG.ab_test.traffic_split` in `draft_data` |
+| 3 | **A/B prompt testing** | ❌ Not started | Allow for A/B testing of different prompts in the user flow and review flow. Support using examples created by users and some seeded examples. This allows us to finetune prompts #analytics_project# |
 | 4 | **Fallback chain** | ❌ Not started | A fails → retry B; B fails → show with warnings. Needs: Approach B first, then retry loop in `draft_data` |
 | 5 | **Provincial adapters** | ❌ Not started | Ontario, British Columbia, New Brunswick. Each needs: adapter class, bill-number format, scraping source |
 | 6 | **Minister handling** | ✅ Complete | Already handled in prompts + email drafting |
@@ -74,7 +74,7 @@ Everything the spec describes, production-ready.
 | 9 | **Robust review UI** | ✅ Complete | Phrases, questions, matches, category, approve/reject all shown |
 | 10 | **Processing step visibility** | ❌ Not started | Add `processing_step` column to bills, update `BillProcessingJob` to set it before each phase, surface in review dashboard (stat cards + table rows) |
 | 11 | **CI/CD pipeline** | ✅ Complete | 5 jobs in CI, dependabot active |
-| 12 | **LLM Stats Tracking** | ❌ **Not implemented** | Record context usage, response times, prefill time, prefill speed, token generation time and token generation speed |
+| 12 | **LLM Stats Tracking** | ❌ **Not implemented** | Record context usage, response times, prefill time, prefill speed, token generation time and token generation speed #analytics_project# |
 | 13 | **Personal context choice** | ❌ **Not started** | After intake answers pass, user chooses: skip (generic draft), structured prompting (questions 1-at-a-time w/ skip + final freeform), or freeform input (single textarea). Three distinct entrypoints to the draft page with unique prompts |
 
 **Exit criteria:** The system matches the spec in full. Four jurisdictions supported. Both drafting approaches work with A/B testing and fallback. All quality checks active. Personal context choice integrated with unique prompts per path. Tests cover the critical paths.
