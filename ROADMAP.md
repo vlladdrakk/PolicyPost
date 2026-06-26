@@ -51,6 +51,7 @@ A constituent can enter their postal code, pick a bill, take a position, answer 
 | 12 | **Edit screen** | ✅ Complete | Name/address fields + email body editing |
 | 13 | **Proper representative titles** | ❌ Not started | `display_name` is bare `title + name`. Should include honorifics: "The Honourable" for ministers, proper MP styling |
 | 14 | **Draft warnings in yellow** | ❌ Not started | Quality warnings render as red `flash alert` in `polling_controller.js:135`. Should render as yellow `flash warning` — mistakes are informational, not errors |
+| 15 | **Admin Authentication** | ❌ Not started | Add a login screen and block access to /jobs and /admin to only logged in admin users |
 
 **Exit criteria:** A user can complete the full flow from postal code to a usable draft email with at least one bill from one jurisdiction. → ✅ **Achieved** (verified by passing system tests)
 
