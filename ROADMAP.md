@@ -90,7 +90,7 @@ Features that improve the product but aren't needed for it to work well.
 | 2 | **Phrase selection strategies** | ✅ Prepped | `select_phrases` supports `round_robin` and `random`. Only `top_only` used at runtime |
 | 3 | **All Canadian jurisdictions** | ❌ Not started | QC, AB, SK, MB, NS, PEI, NL, YT, NT, NU |
 | 4 | **User accounts** | ❌ Not started | Save draft history, revisit past emails, track sent letters |
-| 5 | **Actual email sending** | ❌ Not started | Integrate with SendGrid, Postmark, or similar |
+| 5 | **Trending Bills** | ❌ Not started | Track mentions of bills in news rss feeds and show on main page. Also integrate PolicyPost trends |
 | 6 | **Real postal code API** | ❌ Not started | Live riding lookup instead of seeded mapping |
 | 7 | **Analytics dashboard** | ❌ Not started | Classification accuracy, A/B results, usage metrics |
 | 8 | **Advanced configuration** | ❌ Not started | Let users manually select drafting approach, tone preferences |
@@ -101,6 +101,7 @@ Features that improve the product but aren't needed for it to work well.
 | 13 | **Social sharing** | ❌ Not started | Share your letter (anonymized) or encourage others to write |
 | 14 | **Email templates / saved positions** | ❌ Not started | Pre-fill common personal contexts |
 | 15 | **Representative response tracking** | ❌ Not started | Log whether/when reps reply |
+| 16 | **Custom Campaigns** | ❌ Not started | Option for custom pages with preconfigured position and questions for orgs to send in email campaigns or something |
 
 ---
 
