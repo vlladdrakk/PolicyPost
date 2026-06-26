@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  postal_code: K1A0A6
+  riding: one
+
+two:
+  postal_code: M5V2T6
+  riding: two

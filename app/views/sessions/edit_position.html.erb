@@ -1,0 +1,78 @@
+<% content_for(:title, "Your Position — PolicyPost") %>
+
+<%= render "stepper", step: "position" %>
+
+<h1>Your Position on <%= @bill.short_title.presence || @bill.title.truncate(60) %></h1>
+
+<div class="bill-detail-card">
+  <div class="bill-detail-card__header">
+    <strong><%= @bill.bill_number %></strong> — <%= @bill.title %>
+    <% if @bill.short_title.present? %>
+      <br><em><%= @bill.short_title %></em>
+    <% end %>
+  </div>
+  <div class="bill-detail-card__meta">
+    <%= render "review/bills/status_badge", status: @bill.status %>
+    <%= render "review/bills/status_badge", status: @bill.category %>
+    <span><%= @bill.jurisdiction.capitalize %></span>
+    <% if @bill.introduced_date %>
+      <span>Introduced: <%= @bill.introduced_date.strftime("%B %e, %Y") %></span>
+    <% end %>
+    <% if @bill.sponsor_name.present? %>
+      <span>Sponsor: <%= @bill.sponsor_name %>
+        <% if @bill.sponsor_party.present? %>(<%= @bill.sponsor_party %>)<% end %>
+        <% if @bill.sponsor_riding.present? %>— <%= @bill.sponsor_riding %><% end %>
+      </span>
+    <% end %>
+  </div>
+  <% if @bill.summary.present? %>
+    <div class="bill-detail-card__summary"><%= @bill.summary %></div>
+  <% end %>
+</div>
+
+<% letter = @user_session.constituent_letter %>
+<% if letter.local_mp? %>
+  <% if @bill.senate_bill? %>
+    <p class="senate-note">
+      <em>This bill originated in the Senate. Your MP can still raise concerns and will vote on it if it returns to the House of Commons.</em>
+    </p>
+  <% else %>
+    <p class="senate-note">
+      <em>Your MP can influence this bill by debating it, proposing amendments, and voting on it in the House of Commons.</em>
+    </p>
+  <% end %>
+<% elsif letter.prime_minister? %>
+  <p class="senate-note">
+    <em>The Prime Minister sets the government’s legislative agenda and can direct ministers on this bill.</em>
+  </p>
+<% elsif letter.cabinet_minister? %>
+  <p class="senate-note">
+    <em><%= letter.representative.display_name %> is responsible for their ministry’s files and can shape how this bill is implemented.</em>
+  </p>
+<% end %>
+
+<% if flash[:alert] %>
+  <div class="flash alert"><%= flash[:alert] %></div>
+<% end %>
+
+<%= form_with url: update_position_session_path(@user_session), method: :patch, local: true do |f| %>
+  <%= f.hidden_field :bill_id, value: @bill.id %>
+
+  <fieldset>
+    <legend>What is your position on this bill?</legend>
+    <% DomainConstants::POSITIONS.each do |pos| %>
+      <label>
+        <%= f.radio_button :position, pos, required: true %>
+        <%= pos.humanize %>
+      </label>
+    <% end %>
+  </fieldset>
+
+  <%= f.submit "Continue to Questions" %>
+<% end %>
+
+<p style="margin-top: 1rem;">
+  <%= link_to "Choose a different bill", edit_bill_session_path(@user_session) %>
+  |
+  <%= link_to "Start Over", root_path %>
+</p>

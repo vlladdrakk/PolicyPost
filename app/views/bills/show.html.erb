@@ -1,0 +1,100 @@
+<% content_for(:title, "Write About #{@bill.short_title.presence || @bill.bill_number} — PolicyPost") %>
+
+<h1><%= @bill.bill_number %> — <%= @bill.short_title.presence || @bill.title.truncate(60) %></h1>
+
+<p class="trust-statement">
+  PolicyPost drafts an email for you to review, edit, and send yourself.
+  We never send it for you.
+</p>
+
+<div class="bill-detail-card">
+  <div class="bill-detail-card__header">
+    <strong><%= @bill.bill_number %></strong> — <%= @bill.title %>
+    <% if @bill.short_title.present? %>
+      <br><em><%= @bill.short_title %></em>
+    <% end %>
+  </div>
+  <div class="bill-detail-card__meta">
+    <%= render "review/bills/status_badge", status: @bill.status %>
+    <%= render "review/bills/status_badge", status: @bill.category %>
+    <span><%= @bill.jurisdiction.capitalize %></span>
+    <% if @bill.introduced_date %>
+      <span>Introduced: <%= @bill.introduced_date.strftime("%B %e, %Y") %></span>
+    <% end %>
+    <% if @bill.sponsor_name.present? %>
+      <span>Sponsor: <%= @bill.sponsor_name %>
+        <% if @bill.sponsor_party.present? %>(<%= @bill.sponsor_party %>)<% end %>
+        <% if @bill.sponsor_riding.present? %>— <%= @bill.sponsor_riding %><% end %>
+      </span>
+    <% end %>
+    <p><%= link_to "View original bill ↗", @bill.source_url, target: "_blank", rel: "noopener" %></p>
+  </div>
+  <% if @bill.summary.present? %>
+    <div class="bill-detail-card__summary"><%= @bill.summary %></div>
+  <% end %>
+</div>
+
+<% if flash[:alert] %>
+  <div class="flash alert"><%= flash[:alert] %></div>
+<% end %>
+
+<h2>Who should receive your email?</h2>
+
+<%= form_with url: sessions_path, method: :post, local: true, data: { controller: "recipient-selector" } do |f| %>
+  <%= f.hidden_field :bill_id, value: @bill.id %>
+
+  <fieldset>
+    <legend>Choose a recipient</legend>
+
+    <label>
+      <%= f.radio_button :recipient_type, "local_mp", required: true,
+            data: { action: "change->recipient-selector#selectLocalMp" } %>
+      My local Member of Parliament
+    </label>
+
+    <div data-recipient-selector-target="localMpPostalCode" style="display: none; margin-left: 1.5rem;">
+      <%= f.label :postal_code, "Postal Code" %>
+      <%= f.text_field :postal_code, placeholder: "K1P1A4" %>
+    </div>
+
+    <label>
+      <%= f.radio_button :recipient_type, "prime_minister", required: true,
+            data: { action: "change->recipient-selector#selectPrimeMinister" } %>
+      The Prime Minister
+    </label>
+
+    <label>
+      <%= f.radio_button :recipient_type, "cabinet_minister", required: true,
+            data: { action: "change->recipient-selector#selectCabinetMinister" } %>
+      A cabinet minister
+    </label>
+
+    <div data-recipient-selector-target="cabinetMinisterList" style="display: none; margin-left: 1.5rem;">
+      <% if @ministers.any? %>
+        <div class="minister-list">
+          <% @ministers.each_with_index do |minister, index| %>
+            <label class="minister-option <%= "minister-option--suggested" if index == 0 && ministry_matches_bill?(minister.ministry_name, @bill.category) %>">
+              <%= f.radio_button :minister_id, minister.id,
+                    name: "minister_id", required: false %>
+              <strong><%= minister.name %></strong>
+              <% if minister.ministry_name.present? %>
+                — <%= minister.ministry_name %>
+                <% if index == 0 && ministry_matches_bill?(minister.ministry_name, @bill.category) %>
+                  <span class="suggested-badge">Suggested</span>
+                <% end %>
+              <% end %>
+            </label>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="flash alert">No cabinet ministers are available at this time.</p>
+      <% end %>
+    </div>
+  </fieldset>
+
+  <%= f.submit "Start Writing" %>
+<% end %>
+
+<p style="margin-top: 1rem;">
+  <%= link_to "Choose a different bill", root_path %>
+</p>

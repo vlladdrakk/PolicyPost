@@ -1,0 +1,105 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  jurisdiction: federal
+  legislature_session: 45th Parliament, 1st Session
+  bill_number: C-37
+  bill_type: House Government Bill
+  title: An Act respecting water, source water, drinking water, wastewater and related infrastructure on First Nation lands
+  short_title: First Nations Clean Water Act
+  summary: This enactment affirms the jurisdiction of First Nations in relation to water on First Nation lands.
+  sponsor_name: Mandy Gull-Masty
+  sponsor_riding: Abitibi—Baie-James—Nunavik—Eeyou
+  sponsor_party:
+  status: introduced
+  introduced_date: 2026-06-16
+  last_updated_date: 2026-06-16
+  full_text_url: https://www.parl.ca/DocumentViewer/en/45-1/bill/C-37/first-reading/html
+  full_text: An Act respecting First Nations water rights and water quality on First Nation lands. This enactment affirms the jurisdiction of First Nations in relation to water and water rights. It establishes standards for drinking water, source water, wastewater, and related infrastructure. The bill recognizes Indigenous water rights and creates a framework for clean water access in First Nations communities across Canada.
+  source_url: https://www.parl.ca/LegisInfo/en/bill/45-1/c-37
+  source_id: "14182606"
+  source_bill_id: 14182606
+  parliament_number: 45
+  session_number: 1
+  is_government_bill: true
+  originating_chamber: House of Commons
+  category: indigenous
+  processing_status: pending
+
+three:
+  jurisdiction: federal
+  legislature_session: 45th Parliament, 1st Session
+  bill_number: C-48
+  bill_type: House Government Bill
+  title: An Act to support First Nations water rights and infrastructure development
+  short_title: First Nations Water Rights Act
+  summary: This enactment provides for the recognition and implementation of First Nations water rights and supports infrastructure development in Indigenous communities.
+  sponsor_name: Mandy Gull-Masty
+  sponsor_riding: Abitibi—Baie-James—Nunavik—Eeyou
+  sponsor_party:
+  status: introduced
+  introduced_date: 2026-06-17
+  last_updated_date: 2026-06-17
+  full_text_url: https://www.parl.ca/DocumentViewer/en/45-1/bill/C-48/first-reading/html
+  full_text: This Act supports First Nations water rights and establishes funding for water infrastructure. The bill addresses First Nations water quality and provides resources for clean drinking water. It recognizes Indigenous jurisdiction over water on First Nation lands. First Nations communities will receive water rights protections and infrastructure funding. water rights are central to this legislation.
+  source_url: https://www.parl.ca/LegisInfo/en/bill/45-1/c-48
+  source_id: "14182608"
+  source_bill_id: 14182608
+  parliament_number: 45
+  session_number: 1
+  is_government_bill: true
+  originating_chamber: House of Commons
+  category: indigenous
+  processing_status: pending
+
+senate:
+  jurisdiction: federal
+  legislature_session: 45th Parliament, 1st Session
+  bill_number: S-229
+  bill_type: Senate Public Bill
+  title: An Act to amend the Canada National Parks Act to expand park boundaries
+  short_title: National Parks Amendment Act
+  summary: This bill amends the Canada National Parks Act to expand park boundaries and improve visitor facilities.
+  sponsor_name: Senator Jane Smith
+  sponsor_riding:
+  sponsor_party:
+  status: introduced
+  introduced_date: 2026-06-01
+  last_updated_date: 2026-06-01
+  full_text_url: https://www.parl.ca/DocumentViewer/en/45-1/bill/S-229/first-reading/html
+  full_text: An Act to amend the Canada National Parks Act to expand park boundaries and improve visitor facilities.
+  source_url: https://www.parl.ca/LegisInfo/en/bill/45-1/s-229
+  source_id: "14182700"
+  source_bill_id: 14182700
+  parliament_number: 45
+  session_number: 1
+  is_government_bill: false
+  originating_chamber: Senate
+  category: environment
+  processing_status: approved
+
+two:
+  jurisdiction: federal
+  legislature_session: 45th Parliament, 1st Session
+  bill_number: C-36
+  bill_type: House Government Bill
+  title: An Act to enact the Protecting Privacy and Consumer Data Act
+  short_title:
+  summary:
+  sponsor_name: Some Minister
+  sponsor_riding: Some Riding
+  sponsor_party:
+  status: introduced
+  introduced_date: 2026-06-15
+  last_updated_date: 2026-06-15
+  full_text_url: https://www.parl.ca/DocumentViewer/en/45-1/bill/C-36/first-reading/html
+  full_text: Privacy bill text...
+  source_url: https://www.parl.ca/LegisInfo/en/bill/45-1/c-36
+  source_id: "14182607"
+  source_bill_id: 14182607
+  parliament_number: 45
+  session_number: 1
+  is_government_bill: true
+  originating_chamber: House of Commons
+  category: digital
+  processing_status: pending

@@ -1,0 +1,15 @@
+one:
+  constituent_letter: one
+  approach: A
+  body: Draft email body for testing.
+  status: complete
+  quality_status: pass
+  quality_warnings: ""
+
+two:
+  constituent_letter: two
+  approach: A
+  body: Body for the second draft.
+  status: pending
+  quality_status: pass
+  quality_warnings: ""

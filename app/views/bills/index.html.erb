@@ -1,0 +1,87 @@
+<% content_for(:title, "PolicyPost") %>
+
+<h1>PolicyPost</h1>
+
+<p class="tagline">A tool for making your voice heard by your government representatives.</p>
+
+<p class="home-intro">Browse bills currently before Parliament. Pick one to see more details.</p>
+
+<div class="how-it-works">
+  <h2>How it works</h2>
+  <ol>
+    <li><strong>Pick a bill</strong> — find one you care about in the list below.</li>
+    <li><strong>Choose your position</strong> — support, oppose, or support with amendments.</li>
+    <li><strong>Answer a few questions</strong> — help us understand your perspective.</li>
+    <li><strong>Review and send</strong> — we draft the email; you review, edit, and send it yourself.</li>
+  </ol>
+</div>
+
+<p class="trust-statement">
+  PolicyPost drafts an email for you to review, edit, and send yourself.
+  We never send it for you.
+</p>
+
+<% if flash[:notice] %>
+  <div class="flash notice"><%= flash[:notice] %></div>
+<% end %>
+
+<% if @bills.any? %>
+  <%= form_with url: root_path, method: :get, local: true, class: "bill-filters" do |f| %>
+    <%= f.select :category,
+          options_for_select([["All Categories", ""]] + DomainConstants::CATEGORIES.map { |c| [c.humanize, c] }, params[:category]),
+          {}, class: "category-select" %>
+    <%= f.select :status,
+          options_for_select([["All Statuses", ""]] + DomainConstants::STATUSES.map { |s| [s.humanize, s] }, params[:status]),
+          {} %>
+    <%= f.text_field :q, placeholder: "Search bills…", value: params[:q] %>
+    <%= f.check_box :exclude_senate, checked: @exclude_senate %>
+    <%= f.label :exclude_senate, "Exclude Senate" %>
+    <%= f.submit "Filter" %>
+    <% if @filter_params.present? %>
+      <%= link_to "Clear", root_path %>
+    <% end %>
+  <% end %>
+
+  <div class="pagination-info"><%= page_entries_info @bills %></div>
+
+  <table>
+    <thead>
+      <tr><th>Bill</th><th>Title</th><th>Category</th><th></th></tr>
+    </thead>
+    <% @bills.each do |bill| %>
+      <tbody data-controller="bill-detail">
+        <tr>
+          <td>
+            <%= bill.bill_number %>
+            <% if bill.senate_bill? %>
+              <span class="status-badge status-senate">Senate</span>
+            <% end %>
+          </td>
+          <td><%= (bill.short_title.presence || bill.title).truncate(60) %></td>
+          <td><%= render "review/bills/status_badge", status: bill.category %></td>
+          <td>
+            <button type="button"
+                    class="bill-detail-toggle"
+                    data-action="click->bill-detail#toggle">▼</button>
+            <%= link_to "Select", bill_path(bill) %>
+          </td>
+        </tr>
+        <tr data-bill-detail-target="summary" class="bill-summary-row">
+          <td colspan="4">
+            <div class="bill-summary-content">
+              <%= bill.summary.presence || "No summary available." %>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    <% end %>
+  </table>
+
+  <%= paginate @bills %>
+<% else %>
+  <p>No bills are available for review at this time. Please check back later.</p>
+<% end %>
+
+<p style="margin-top: 1rem;">
+  <%= link_to "Review bills (admin)", admin_bills_path %>
+</p>

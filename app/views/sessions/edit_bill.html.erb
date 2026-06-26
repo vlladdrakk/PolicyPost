@@ -1,0 +1,68 @@
+<% content_for(:title, "Select a Bill — PolicyPost") %>
+
+<%= render "stepper", step: "bill" %>
+
+<h1>Select a Bill</h1>
+
+<p>Writing to: <strong><%= @user_session.constituent_letter.representative.display_name %></strong></p>
+
+<% if @bills.any? %>
+  <%= form_with url: edit_bill_session_path(@user_session), method: :get, local: true, class: "bill-filters" do |f| %>
+    <%= f.select :category,
+          options_for_select([["All Categories", ""]] + DomainConstants::CATEGORIES.map { |c| [c.humanize, c] }, params[:category]),
+          {}, class: "category-select" %>
+    <%= f.select :status,
+          options_for_select([["All Statuses", ""]] + DomainConstants::STATUSES.map { |s| [s.humanize, s] }, params[:status]),
+          {} %>
+    <%= f.text_field :q, placeholder: "Search bills…", value: params[:q] %>
+    <%= f.submit "Filter" %>
+    <% if @filter_params.present? %>
+      <%= link_to "Clear", edit_bill_session_path(@user_session) %>
+    <% end %>
+  <% end %>
+
+  <div class="pagination-info"><%= page_entries_info @bills %></div>
+
+  <table>
+    <thead>
+      <tr><th>Bill</th><th>Title</th><th>Category</th><th></th></tr>
+    </thead>
+    <% @bills.each do |bill| %>
+      <tbody data-controller="bill-detail">
+        <tr>
+          <td>
+            <%= bill.bill_number %>
+            <% if bill.senate_bill? %>
+              <span class="status-badge status-senate">Senate</span>
+            <% end %>
+          </td>
+          <td><%= (bill.short_title.presence || bill.title).truncate(60) %></td>
+          <td><%= render "review/bills/status_badge", status: bill.category %></td>
+          <td>
+            <button type="button"
+                    class="bill-detail-toggle"
+                    data-action="click->bill-detail#toggle">▼</button>
+            <%= button_to "Select", update_bill_session_path(@user_session),
+                  method: :patch,
+                  params: { bill_id: bill.id } %>
+          </td>
+        </tr>
+        <tr data-bill-detail-target="summary" class="bill-summary-row">
+          <td colspan="4">
+            <div class="bill-summary-content">
+              <%= bill.summary.presence || "No summary available." %>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    <% end %>
+  </table>
+
+  <%= paginate @bills %>
+<% else %>
+  <p>No bills are available for review at this time. Please check back later.</p>
+<% end %>
+
+<p style="margin-top: 1rem;">
+  <%= link_to "Start Over", root_path %>
+</p>

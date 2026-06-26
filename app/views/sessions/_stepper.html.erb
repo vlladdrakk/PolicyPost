@@ -1,0 +1,20 @@
+<% steps = ["Bill", "Recipient", "Position", "Your Input", "Draft"] %>
+<% labels = {
+  "bill" => 0,
+  "recipient" => 1,
+  "position" => 2,
+  "questions" => 3,
+  "draft" => 4
+} %>
+<% current_index = labels[step] || 0 %>
+
+<nav class="stepper" aria-label="Progress">
+  <% steps.each_with_index do |label, index| %>
+    <span class="stepper__step <%= "stepper__step--current" if index == current_index %> <%= "stepper__step--completed" if index < current_index %>">
+      <%= label %>
+    </span>
+    <% if index < steps.length - 1 %>
+      <span class="stepper__separator">→</span>
+    <% end %>
+  <% end %>
+</nav>

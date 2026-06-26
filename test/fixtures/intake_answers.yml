@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  constituent_letter: one
+  question: indigenous_impact
+  answer: I live near a First Nation community and have seen the water quality issues firsthand.
+  follow_up_answer:
+  verdict: good
+
+two:
+  constituent_letter: two
+  question: digital_knowledge
+  answer: I am worried about privacy.
+  follow_up_answer: Specifically about data breaches.
+  verdict: vague

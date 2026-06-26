@@ -1,0 +1,96 @@
+<% content_for(:title, "Bill Review — PolicyPost") %>
+
+<h1>Bill Review</h1>
+
+<% if flash[:alert] %>
+  <div class="flash alert"><%= flash[:alert] %></div>
+<% end %>
+<% if flash[:notice] %>
+  <div class="flash notice"><%= flash[:notice] %></div>
+<% end %>
+
+<div class="stat-cards">
+  <div class="stat-card stat-total">
+    <span class="stat-value"><%= @stats[:total] %></span>
+    <span class="stat-label">Total Bills</span>
+  </div>
+  <div class="stat-card stat-pending">
+    <span class="stat-value"><%= @stats[:pending] %></span>
+    <span class="stat-label">Pending</span>
+  </div>
+  <div class="stat-card stat-processing">
+    <span class="stat-value"><%= @stats[:processing] %></span>
+    <span class="stat-label">Processing</span>
+  </div>
+  <div class="stat-card stat-review">
+    <span class="stat-value"><%= @stats[:review] %></span>
+    <span class="stat-label">In Review</span>
+  </div>
+  <div class="stat-card stat-approved">
+    <span class="stat-value"><%= @stats[:approved] %></span>
+    <span class="stat-label">Live</span>
+  </div>
+</div>
+
+<div class="filters-row">
+  <nav class="status-tabs">
+    <% %w[review all pending approved rejected].each do |tab| %>
+      <% if @status == tab %>
+        <strong><%= tab.capitalize %></strong>
+      <% else %>
+        <%= link_to tab.capitalize, admin_bills_path(status: tab, exclude_senate: params[:exclude_senate]) %>
+      <% end %>
+    <% end %>
+  </nav>
+
+  <div class="filters-actions">
+    <%= form_with url: admin_bills_path, method: :get, local: true, class: "senate-filter" do |f| %>
+      <%= f.hidden_field :status, value: @status %>
+      <%= f.check_box :exclude_senate, checked: @exclude_senate,
+            onchange: "this.form.submit()" %>
+      <%= f.label :exclude_senate, "Exclude Senate bills" %>
+    <% end %>
+
+    <%= button_to "Reset All Bills",
+          reset_all_admin_bills_path,
+          method: :post,
+          form: { data: { turbo_confirm: "Reset ALL bills for reprocessing? This includes approved/live bills." } },
+          class: "btn-danger" %>
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Bill</th>
+      <th>Title</th>
+      <th>Status</th>
+      <th>Category</th>
+      <th>Review</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @bills.each do |bill| %>
+      <tr>
+        <td><%= link_to bill.bill_number, admin_bill_path(bill) %></td>
+        <td><%= (bill.short_title.presence || bill.title).truncate(60) %></td>
+        <td><%= bill.status %></td>
+        <td><%= bill.category %></td>
+        <td><%= render "status_badge", status: bill.processing_status %></td>
+        <td>
+          <% if bill.processing_status == "review" %>
+            <%= button_to "Approve", admin_bill_path(bill),
+                  method: :patch,
+                  params: { commit: "Approve Bill" },
+                  form: { data: { turbo_confirm: "Approve #{bill.bill_number}?" } } %>
+            <%= link_to "Reject", admin_bill_path(bill) %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+    <% if @bills.empty? %>
+      <tr><td colspan="6">No bills with status "<%= @status %>".</td></tr>
+    <% end %>
+  </tbody>
+</table>

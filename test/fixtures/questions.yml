@@ -1,0 +1,137 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+indigenous_impact:
+  category: indigenous
+  position: support
+  question_type: personal_impact
+  priority: 1
+  body: How has {bill_subject} affected you or your community?
+  active: true
+
+indigenous_knowledge:
+  category: indigenous
+  position: support
+  question_type: knowledge
+  priority: 2
+  body: What do you know about {bill_subject} and its implications?
+  active: true
+
+indigenous_action:
+  category: indigenous
+  position: support
+  question_type: action
+  priority: 3
+  body: What action would you like your representative to take on {bill_subject}?
+  active: true
+
+indigenous_experience_support:
+  category: indigenous
+  position: support
+  question_type: experience
+  priority: 4
+  body: What personal experience do you have with {bill_subject}?
+  active: true
+
+indigenous_experience_oppose:
+  category: indigenous
+  position: oppose
+  question_type: experience
+  priority: 1
+  body: What personal experience do you have with {bill_subject}?
+  active: true
+
+indigenous_values:
+  category: indigenous
+  position: oppose
+  question_type: values
+  priority: 2
+  body: Why is this issue important to you personally?
+  active: true
+
+indigenous_impact_oppose:
+  category: indigenous
+  position: oppose
+  question_type: personal_impact
+  priority: 3
+  body: How has {bill_subject} negatively affected you or your community?
+  active: true
+
+indigenous_knowledge_oppose:
+  category: indigenous
+  position: oppose
+  question_type: knowledge
+  priority: 4
+  body: What concerns you most about {bill_subject}?
+  active: true
+
+digital_impact:
+  category: digital
+  position: support
+  question_type: personal_impact
+  priority: 1
+  body: How has {bill_subject} affected your privacy or online experience?
+  active: true
+
+digital_knowledge:
+  category: digital
+  position: oppose
+  question_type: knowledge
+  priority: 1
+  body: What concerns you most about {bill_subject}?
+  active: true
+
+digital_experience:
+  category: digital
+  position: support
+  question_type: experience
+  priority: 2
+  body: Describe an experience that relates to {bill_subject}.
+  active: true
+
+digital_action:
+  category: digital
+  position: oppose
+  question_type: action
+  priority: 3
+  body: What would you like your representative to do about {bill_subject}?
+  active: true
+
+digital_values:
+  category: digital
+  position: support
+  question_type: values
+  priority: 4
+  body: Why is digital policy important to your daily life?
+  active: true
+
+governance_impact:
+  category: governance
+  position: support
+  question_type: personal_impact
+  priority: 1
+  body: How has {bill_subject} affected your engagement with government?
+  active: true
+
+governance_knowledge:
+  category: governance
+  position: oppose
+  question_type: knowledge
+  priority: 2
+  body: What do you understand about the purpose of {bill_subject}?
+  active: true
+
+governance_experience:
+  category: governance
+  position: support
+  question_type: experience
+  priority: 3
+  body: Describe your experience with {bill_subject}.
+  active: true
+
+governance_action:
+  category: governance
+  position: oppose
+  question_type: action
+  priority: 4
+  body: What action should be taken regarding {bill_subject}?
+  active: true

@@ -1,0 +1,103 @@
+<% content_for(:title, "Review: #{@bill.bill_number} — PolicyPost") %>
+
+<%= link_to "← Back to Review", admin_bills_path %>
+
+<h1>Review: <%= @bill.bill_number %> — <%= @bill.short_title.presence || @bill.title.truncate(80) %></h1>
+
+<% if flash[:alert] %>
+  <div class="flash alert"><%= flash[:alert] %></div>
+<% end %>
+<% if flash[:notice] %>
+  <div class="flash notice"><%= flash[:notice] %></div>
+<% end %>
+
+<!-- Bill Metadata -->
+<table>
+  <tr><th>Bill Number</th><td><%= @bill.bill_number %></td></tr>
+  <tr><th>Title</th><td><%= @bill.title %></td></tr>
+  <% if @bill.short_title %><tr><th>Short Title</th><td><%= @bill.short_title %></td></tr><% end %>
+  <tr><th>Status</th><td><%= @bill.status %></td></tr>
+  <tr><th>Jurisdiction</th><td><%= @bill.jurisdiction %></td></tr>
+  <tr><th>Introduced</th><td><%= @bill.introduced_date %></td></tr>
+  <tr><th>Type</th><td><%= @bill.bill_type %></td></tr>
+  <tr><th>Originating Chamber</th><td><%= @bill.originating_chamber || "Unknown" %></td></tr>
+  <% if @bill.summary.present? %>
+    <tr><th>Summary</th><td><%= @bill.summary %></td></tr>
+  <% end %>
+</table>
+
+<!-- Fallback Warning -->
+<% if @fallback_warning %>
+  <div class="warning">
+    ⚠ Category was defaulted to governance by the SLM after classification failed.
+    <%= @bill.review_notes %>
+  </div>
+<% end %>
+
+<!-- Category -->
+<h2>Category</h2>
+<%= form_with model: @bill, url: admin_bill_path(@bill), method: :patch, local: true do |f| %>
+  <%= f.select :category, DomainConstants::CATEGORIES.sort, {}, class: "category-select" %>
+  <%= f.submit "Update Category", name: "commit", value: "Update Category" %>
+<% end %>
+
+<!-- Verified Phrases -->
+<h2>Verified Phrases</h2>
+<% if @verified_phrases.any? %>
+  <table>
+    <thead><tr><th>Phrase</th><th></th></tr></thead>
+    <tbody>
+      <% @verified_phrases.each do |phrase| %>
+        <tr>
+          <td>✓ <%= phrase.phrase %></td>
+          <td>
+            <%= link_to "Remove", admin_bill_phrase_path(@bill, phrase),
+                  data: { turbo_method: :delete } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p><em>No verified phrases.</em></p>
+<% end %>
+
+<%= form_with url: admin_bill_phrases_path(@bill), method: :post, local: true do |f| %>
+  <%= f.text_field :phrase, placeholder: "Add phrase…", required: true %>
+  <%= f.submit "Add" %>
+<% end %>
+
+<!-- Generated Questions -->
+<%= render "generated_questions", bill: @bill, generated_questions: @generated_questions, position: "support" %>
+<%= render "generated_questions", bill: @bill, generated_questions: @generated_questions, position: "oppose" %>
+
+<!-- Questions: Support -->
+<h2>Selected Questions — Support</h2>
+<%= render "question_section", selections: @support_selections, position: "support" %>
+
+<!-- Questions: Oppose -->
+<h2>Selected Questions — Oppose</h2>
+<%= render "question_section", selections: @oppose_selections, position: "oppose" %>
+
+<!-- Review Notes + Approve / Reject -->
+<h2>Review Decision</h2>
+
+<div class="actions">
+  <%= form_with url: admin_bill_path(@bill), method: :patch, local: true do |f| %>
+    <%= f.hidden_field :commit, value: "Approve Bill" %>
+    <%= f.submit "Approve Bill", class: "btn-approve" %>
+  <% end %>
+
+  <%= form_with model: @bill, url: admin_bill_path(@bill), method: :patch, local: true, class: "reject-form" do |f| %>
+    <%= f.label :review_notes, "Review Notes (required for rejection)" %><br>
+    <%= f.text_area :review_notes, rows: 3, placeholder: "Notes about this bill — required if rejecting…" %>
+    <br>
+    <%= f.submit "Reject Bill", name: "commit", value: "Reject Bill", class: "btn-reject" %>
+  <% end %>
+
+  <%= button_to "Reprocess Bill",
+        reprocess_admin_bill_path(@bill),
+        method: :post,
+        form: { data: { turbo_confirm: "Reprocess #{@bill.bill_number}? This will reset all review data." } },
+        class: "btn-warning" %>
+</div>

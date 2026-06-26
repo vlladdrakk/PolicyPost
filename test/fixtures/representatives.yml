@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MP
+  name: Mandy Gull-Masty
+  email: Mandy.Gull-Masty@parl.gc.ca
+  riding: one
+  is_minister: true
+  ministry_name: Indigenous Services
+
+two:
+  title: MP
+  name: Some Other MP
+  email: Some.Other@parl.gc.ca
+  riding: two
+  is_minister: false
+  ministry_name:

@@ -1,0 +1,72 @@
+<% content_for(:title, "Your Draft Email — PolicyPost") %>
+
+<%= render "stepper", step: "draft" %>
+
+<h1>Your Draft Email</h1>
+
+<p class="trust-statement">
+  This is a draft. Review and edit it, then copy it into your own email app to send.
+  PolicyPost does not send emails on your behalf.
+</p>
+
+<p>To: <%= @letter.representative.display_name %><% if @letter.representative.email.present? %> &lt;<%= @letter.representative.email %>&gt;<% end %></p>
+<p>Bill: <%= @letter.bill.bill_number %> — <%= @letter.bill.short_title.presence || @letter.bill.title.truncate(60) %></p>
+<p>Position: <strong><%= @letter.position.humanize %></strong></p>
+
+<div data-controller="polling"
+     data-polling-mode-value="draft"
+     data-polling-start-url-value="<%= draft_data_session_path(@user_session) %>"
+     data-polling-status-url-value="<%= draft_status_session_path(@user_session) %>"
+     data-polling-start-over-url-value="<%= root_path %>"
+     data-polling-target="container">
+  <div class="slm-spinner">
+    <div class="spinner-icon"></div>
+    <p>Loading…</p>
+  </div>
+</div>
+
+<div id="draft-form" style="display: none;" data-controller="draft-preview"
+     data-draft-preview-recipient-email-value="<%= @letter.representative.email.to_s %>"
+     data-draft-preview-subject-value="Re: <%= @letter.bill.bill_number %> — <%= @letter.bill.short_title.presence || @letter.bill.title.truncate(60) %>">
+  <div id="draft-warnings"></div>
+
+  <%= form_with url: update_draft_session_path(@user_session), method: :patch, local: true do |f| %>
+    <div>
+      <%= f.label :full_name, "Your Full Name" %>
+      <%= f.text_field :full_name, required: true, placeholder: "Jane Doe",
+            data: { draft_preview_target: "name", action: "input->draft-preview#onNameInput" } %>
+    </div>
+
+    <div style="margin: 1rem 0;">
+      <%= f.label :address, "Your Address" %>
+      <%= f.text_field :address, required: true, placeholder: "123 Main St, Ottawa, ON K1A 0A6",
+            data: { draft_preview_target: "address", action: "input->draft-preview#onAddressInput" } %>
+    </div>
+
+    <div style="margin: 1rem 0;">
+      <%= f.label :body, "Email Body (edit as needed)" %>
+      <%= f.text_area :body, id: "draft-body-textarea", rows: 20,
+            style: "width: 100%; font-family: Georgia, serif;",
+            data: { draft_preview_target: "body", action: "input->draft-preview#onBodyInput" } %>
+    </div>
+
+    <div id="reset-placeholders" style="display: none; margin: -0.5rem 0 1rem 0;"
+         data-draft-preview-target="resetPlaceholders">
+      <a href="#" data-action="draft-preview#resetPreview" style="font-size: 0.875rem;">Reset placeholders</a>
+    </div>
+
+    <div class="draft-actions">
+      <%= f.button type: "button", data: { action: "draft-preview#copyDraft", draft_preview_target: "copyButton" } do %>
+        Copy draft
+      <% end %>
+      <%= f.button type: "button", data: { action: "draft-preview#openEmail" } do %>
+        Open email app
+      <% end %>
+    </div>
+    <p data-draft-preview-target="statusMessage" class="draft-status-message" style="display: none;"></p>
+  <% end %>
+
+  <p style="margin-top: 1rem;">
+    <%= link_to "Start Over", root_path %>
+  </p>
+</div>

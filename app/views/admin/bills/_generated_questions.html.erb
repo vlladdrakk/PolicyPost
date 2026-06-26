@@ -1,0 +1,50 @@
+<h2>Generated Questions — <%= position.humanize %></h2>
+
+<% questions = generated_questions[position] || [] %>
+
+<% if questions.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Status</th>
+        <th>Question</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% questions.each do |q| %>
+        <tr id="generated_question_<%= q.id %>">
+          <td>
+            <% if q.status == "pending" %>
+              <span class="status-pending">Pending</span>
+            <% elsif q.status == "approved" %>
+              <span class="status-approved">Approved</span>
+            <% else %>
+              <span class="status-rejected">Rejected</span>
+            <% end %>
+          </td>
+          <td>
+            <%= form_with model: [:admin, bill, q], url: admin_bill_generated_question_path(bill, q), method: :patch, local: true, class: "generated-question-form" do |f| %>
+              <%= f.text_area :body, rows: 2, class: "generated-question-body" %>
+              <%= f.submit "Update & Approve", class: "btn-secondary" %>
+            <% end %>
+          </td>
+          <td>
+            <% if q.status != "approved" %>
+              <%= form_with url: approve_admin_bill_generated_question_path(bill, q), method: :patch, local: true, class: "inline-form" do %>
+                <%= submit_tag "Approve", class: "btn-approve-small" %>
+              <% end %>
+            <% end %>
+            <% if q.status != "rejected" %>
+              <%= form_with url: reject_admin_bill_generated_question_path(bill, q), method: :patch, local: true, class: "inline-form" do %>
+                <%= submit_tag "Reject", class: "btn-reject-small" %>
+              <% end %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p><em>No generated questions for this position.</em></p>
+<% end %>

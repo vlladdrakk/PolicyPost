@@ -1,0 +1,66 @@
+<% content_for(:title, "Your Answers — PolicyPost") %>
+
+<%= render "stepper", step: "questions" %>
+
+<h1>Tell Us More</h1>
+
+<p>Bill: <%= @letter.bill.bill_number %> — <%= @letter.bill.short_title.presence || @letter.bill.title.truncate(60) %></p>
+<p>Your position: <strong><%= @letter.position.humanize %></strong></p>
+<p><em>All answers are optional — answer any or all, then continue when ready.</em></p>
+
+<% if flash[:alert] %>
+  <div class="flash alert"><%= flash[:alert] %></div>
+<% end %>
+
+<% if @processing %>
+  <div data-controller="polling"
+       data-polling-mode-value="questions"
+       data-polling-start-url-value="<%= answer_status_session_path(@user_session) %>"
+       data-polling-status-url-value="<%= answer_status_session_path(@user_session) %>"
+       data-polling-draft-url="<%= draft_session_path(@user_session) %>"
+       data-polling-questions-url="<%= questions_session_path(@user_session) %>"
+       data-polling-target="container">
+    <div class="slm-spinner">
+      <div class="spinner-icon"></div>
+      <p>Reviewing your answers…</p>
+    </div>
+  </div>
+
+<% elsif @follow_up %>
+  <p>Here are the answers you've already provided:</p>
+
+  <% @saved_answers.each do |sa| %>
+    <%= render "answer_summary", question_body: sa[:question_body], answer: sa[:answer] %>
+  <% end %>
+
+  <div class="follow-up-banner">
+    <strong>Your answer to "<%= @follow_up_question_body %>" could use more detail.</strong>
+    <br><%= @follow_up_text %>
+  </div>
+
+  <p><em>This follow-up is optional — you can continue without answering.</em></p>
+
+  <%= form_with url: answer_questions_session_path(@user_session), method: :patch, local: true do |f| %>
+    <%= f.hidden_field :follow_up_question_id, value: @follow_up %>
+    <%= f.text_area :follow_up_answer, rows: 3, placeholder: "Add more detail, or leave blank to skip…" %>
+    <%= f.submit "Submit & Continue to Draft" %>
+  <% end %>
+
+<% else %>
+  <p><em>Answer any questions you'd like — skip any you prefer not to answer.</em></p>
+
+  <%= form_with url: answer_questions_session_path(@user_session), method: :patch, local: true do |f| %>
+    <% @adapted_questions.each do |aq| %>
+      <div class="question-block">
+        <p><strong><%= aq[:question_body] %></strong></p>
+        <%= f.text_area "answers[#{aq[:selection].question_id}]", rows: 3, placeholder: "Type your answer, or leave blank to skip…" %>
+      </div>
+    <% end %>
+
+    <%= f.submit "Continue to Draft" %>
+  <% end %>
+<% end %>
+
+<p style="margin-top: 1rem;">
+  <%= link_to "Start Over", root_path %>
+</p>

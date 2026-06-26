@@ -1,0 +1,38 @@
+<% if selections.any? %>
+  <table>
+    <thead><tr><th>#</th><th>Question</th><th>Matched Phrases</th><th></th></tr></thead>
+    <tbody>
+      <% selections.each_with_index do |sel, i| %>
+        <tr>
+          <td><%= i + 1 %></td>
+          <td><%= sel.question.body %></td>
+          <td>
+            <% phrases = sel.question_phrases.ranked.includes(:bill_phrase) %>
+            <% if phrases.any? %>
+              <% phrases.each do |qp| %>
+                <%= qp.rank %>. <%= qp.bill_phrase.phrase %><br>
+              <% end %>
+            <% else %>
+              <em>No phrases matched</em>
+            <% end %>
+          </td>
+          <td>
+            <%= link_to "Remove", admin_bill_selection_path(@bill, sel),
+                  data: { turbo_method: :delete } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p><em>No <%= position %> questions selected.</em></p>
+<% end %>
+
+<% remaining = @remaining_questions[position] %>
+<% if remaining.present? %>
+  <%= form_with url: admin_bill_selections_path(@bill), method: :post, local: true do |f| %>
+    <%= f.hidden_field :position, value: position %>
+    <%= f.select :question_id, remaining.map { |q| [ q.body.truncate(60), q.id ] }, {}, required: true %>
+    <%= f.submit "Add Question" %>
+  <% end %>
+<% end %>
